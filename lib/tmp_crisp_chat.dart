@@ -44,7 +44,7 @@ class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveCl
         _onPageFinished(state.url);
         break;
       case WebViewState.shouldStart:
-        _onPageStarted(state.url);
+        if (_onPageStarted(state.url)) await flutterWebViewPlugin.stopLoading();
         break;
       default:
         break;
@@ -133,8 +133,8 @@ class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveCl
       onPageFinished: (url) {
         _onPageFinished(url);
       },
-      onPageStarted: (url) async {
-        if (_onPageStarted(url)) await flutterWebViewPlugin.stopLoading();
+      onPageStarted: (url) {
+        _onPageStarted(url);
       },
     );
   }
