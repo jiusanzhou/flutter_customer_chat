@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_customer_chat/models/user.dart';
+import 'package:flutter_customer_chat/webview.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class CrispChatView extends StatefulWidget {
+
+  WebviewType webviewType;
+
+  CrispChatView({
+    this.webviewType: WebviewType.WebviewPlugin,
+  });
 
   @override
   _CrispChatViewState createState() => _CrispChatViewState();
@@ -14,7 +21,7 @@ class CrispChatView extends StatefulWidget {
 class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveClientMixin<CrispChatView> {
 
   WebViewController _webViewController;
-
+  InAppWebViewController _inAppWebViewController;
   final flutterWebViewPlugin = FlutterWebviewPlugin();
 
   bool browserContextChanged = false;
@@ -22,6 +29,7 @@ class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveCl
   handleAppLifecycleState() {
     SystemChannels.lifecycle.setMessageHandler((msg) {
       if (msg == "AppLifecycleState.resumed" && browserContextChanged) {
+        print("AppLifecycleState.resumed && browserContextChanged need reload url");
         flutterWebViewPlugin.reloadUrl(crisp.url);
         browserContextChanged = false;
       }
@@ -56,6 +64,8 @@ class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveCl
   void dispose() {
     super.dispose();
 
+    print("we have to dispose the instance of crisp webview");
+
     flutterWebViewPlugin.dispose();
   }
 
@@ -68,10 +78,21 @@ class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveCl
       ),
     );
 
-    return _webviewScaffold();
+
+    // 只有 pluginwebview 的输入框在键盘弹出时正常工作
+    switch (widget.webviewType) {
+      case WebviewType.InappWebview:
+        return _inappwebview();
+      case WebviewType.WebviewPlugin:
+        return _pluginwebview();
+      case WebviewType.WebviewPreview:
+        return _flutterwebview();
+      default:
+        return _inappwebview();
+    }
   }
 
-  Widget _webviewScaffold() {
+  Widget _pluginwebview() {
     return WebviewScaffold(
       url: crisp.url,
       mediaPlaybackRequiresUserGesture: false,
@@ -100,42 +121,50 @@ class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveCl
   }
 
   Widget _inappwebview() {
-    return InAppWebView(
-      initialUrl: crisp.url,
-      initialOptions: InAppWebViewWidgetOptions(
-        inAppWebViewOptions: InAppWebViewOptions(
-          javaScriptEnabled: true,
-          debuggingEnabled: false,
-          // contentBlockers: widget.blockers,
+    return Scaffold(
+      resizeToAvoidBottomInset: true, // 弹起键盘时可以 resize
+      body: InAppWebView(
+        initialUrl: crisp.url,
+        onWebViewCreated: (v) => _inAppWebViewController = v,
+        initialOptions: InAppWebViewWidgetOptions(
+          inAppWebViewOptions: InAppWebViewOptions(
+            javaScriptEnabled: true,
+            debuggingEnabled: false,
+            // contentBlockers: widget.blockers,
+          ),
+          androidInAppWebViewOptions: AndroidInAppWebViewOptions(
+            useWideViewPort: false,
+          ),
         ),
-        androidInAppWebViewOptions: AndroidInAppWebViewOptions(
-          useWideViewPort: false,
-        ),
+        onLoadStop: (c, url) {
+          _onPageFinished(url);
+        },
+        onLoadStart: (c, url) {
+          if (_onPageStarted(url)) {
+            c.stopLoading();
+          }
+        },
       ),
-      onLoadStop: (c, url) {
-        _onPageFinished(url);
-      },
-      onLoadStart: (c, url) {
-        if (_onPageStarted(url)) {
-          c.stopLoading();
-        }
-      },
     );
   }
 
-  Widget _webview() {
-    return WebView(
-      initialUrl: crisp.url,
-      debuggingEnabled: true,
-      onWebViewCreated: (c) {
-        _webViewController = c;
-      },
-      onPageFinished: (url) {
-        _onPageFinished(url);
-      },
-      onPageStarted: (url) {
-        _onPageStarted(url);
-      },
+  Widget _flutterwebview() {
+    return Scaffold(
+      resizeToAvoidBottomInset: true, 
+      body: WebView(
+        initialUrl: crisp.url,
+        debuggingEnabled: false,
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (c) {
+          _webViewController = c;
+        },
+        onPageFinished: (url) {
+          _onPageFinished(url);
+        },
+        onPageStarted: (url) {
+          _onPageStarted(url);
+        },
+      ),
     );
   }
 
@@ -149,8 +178,14 @@ class _CrispChatViewState extends State<CrispChatView> with AutomaticKeepAliveCl
     var code = """var _sa = setInterval(function(){if (typeof \$crisp !== 'undefined'){${crisp.initscript};clearInterval(_sa);}},500);''""";
     /// 执行crips初始化
     flutterWebViewPlugin?.evalJavascript(code);
-    crisp.scripts.forEach((code) { flutterWebViewPlugin?.evalJavascript(code); });
+    _inAppWebViewController?.evaluateJavascript(source: code);
     _webViewController?.evaluateJavascript(code);
+    
+    crisp.scripts.forEach((code) {
+      flutterWebViewPlugin?.evalJavascript(code);
+      _inAppWebViewController?.evaluateJavascript(source: code);
+      _webViewController?.evaluateJavascript(code);
+    });
     /// 去掉标识
   }
 }

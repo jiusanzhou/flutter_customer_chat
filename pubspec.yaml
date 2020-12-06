@@ -1,11 +1,11 @@
 name: flutter_customer_chat
-description: A new Flutter package project.
+description: Customer chat flutter package
 version: 0.0.1
 author:
 homepage:
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
