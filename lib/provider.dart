@@ -1,26 +1,36 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_customer_chat/models/message.dart';
 import 'package:flutter_customer_chat/models/user.dart';
 
 abstract class Provider {
 
+  // get the code back
+
   String url; // url to load
+  String html; // html 
+
+  String isInited; // code to check 
+  
+  Provider();
 
   /// initialize a provider
-  @protected
-  Future<void> initialize({Map<String, dynamic> config: const {}}) {
+  Future<String> initialize({Map<String, dynamic> config: const {}}) {
     return Future.value();
   }
 
   /// set a special user for current instance
-  @protected
-  Future<User> setUser(User user) {
+  Future<String> setUser(User user) {
     return Future.value();
   }
 
-  //// send message with a special user
-  @protected
-  Future<void> sendMessage(Message msg, { User user }) {
+  /// send message with a special user
+  Future<String> sendMessage(Message msg, { User user }) {
     return Future.value();
   }
+
+  /// set field
+  Future<String> setValue(String key, dynamic value) {
+    return Future.value();
+  }
+
+  /// TODO: initialized
 }

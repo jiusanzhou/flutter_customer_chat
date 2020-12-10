@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class User {
   String email;
   String nickname;
@@ -10,6 +8,6 @@ class User {
     this.email,
     this.avatar,
     this.nickname,
-    @required this.phone,
-  }) : assert(phone != null);
+    this.phone,
+  });
 }
