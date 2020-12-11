@@ -181,7 +181,7 @@ class WebviewController {
         return _flutterWebViewPlugin.evalJavascript(source).then((value) => jsonDecode(value));
         break;
       case WebviewType.WebviewPreview:
-        return _webViewController.evaluateJavascript(source);
+        return _webViewController.evaluateJavascript(source).then((value) => jsonDecode(value));
         break;
       default:
     }
