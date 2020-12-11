@@ -1,5 +1,6 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -109,9 +110,9 @@ class _WebviewState extends State<Webview> {
       resizeToAvoidBottomInset: true, // 弹起键盘时可以 resize
       body: InAppWebView(
         initialUrl: widget.initialUrl,
-        initialData: InAppWebViewInitialData(
-          data: widget.initialData,
-        ),
+        // initialData: widget.initialData ?? InAppWebViewInitialData(
+        //   data: widget.initialData,
+        // ),
         onWebViewCreated: (c) => _controller._inAppWebViewController = c,
         initialOptions: InAppWebViewWidgetOptions(
           inAppWebViewOptions: InAppWebViewOptions(
@@ -177,7 +178,7 @@ class WebviewController {
         return _inAppWebViewController.evaluateJavascript(source: source);
         break;
       case WebviewType.WebviewPlugin:
-        return _flutterWebViewPlugin.evalJavascript(source);
+        return _flutterWebViewPlugin.evalJavascript(source).then((value) => jsonDecode(value));
         break;
       case WebviewType.WebviewPreview:
         return _webViewController.evaluateJavascript(source);

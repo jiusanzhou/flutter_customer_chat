@@ -8,12 +8,14 @@ import 'package:flutter_customer_chat/webview.dart';
 
 class ChatView extends StatefulWidget {
 
-  final Provider provider;
+  final ChatProvider provider;
 
   final void Function(Controller controller) onCreated;
   final void Function(Controller controller) onInited;
+  ///WebviewType choose a special type
+  final WebviewType webviewType;
 
-  ChatView(this.provider, { this.onCreated, this.onInited });
+  ChatView(this.provider, { this.onCreated, this.onInited, this.webviewType: WebviewType.InappWebview });
 
   @override
   _ChatViewState createState() => _ChatViewState();
@@ -35,14 +37,12 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     return Webview(
+      webviewType: widget.webviewType,
       initialUrl: widget.provider.url,
       initialData: widget.provider.html,
       onWebViewCreated: (c) => _controller._webview = c,
       onLoadStart: (_, url) => {},
-      onLoadStop: (_, url) {
-        widget.provider.initialize().then((code) => _controller._webview.evaluateJavascript(code));
-        _controller.onLoadFinish();
-      },
+      onLoadStop: (_, url) => _controller.onLoadFinish(),
     );
   }
 }
@@ -51,7 +51,7 @@ class _ChatViewState extends State<ChatView> {
 class Controller {
 
   ChatView _widget;
-  Provider _provider;
+  ChatProvider _provider;
 
   WebviewController _webview;
   
@@ -63,7 +63,7 @@ class Controller {
 
   WebviewController get webview => _webview;
 
-  Provider get provider => _provider;
+  ChatProvider get provider => _provider;
 
   Future<void> setUser(User user) {
     _provider.setUser(user).then((code) => _webview.evaluateJavascript(code)).then((value) => print("setUser: $value"));
@@ -82,11 +82,12 @@ class Controller {
 
   onLoadFinish() {
     /// start the inited check timer
-    Timer.periodic(Duration(milliseconds: 100), (timer) {
+    Timer.periodic(Duration(milliseconds: 200), (timer) {
       _webview.evaluateJavascript(provider.isInited).then((value) {
         if (!value) return;
         print("chat page has been inited ...");
-        _widget.onInited?.call(this);
+        _provider.initialize().then((code) => _webview.evaluateJavascript(code)); // from provider
+        _widget.onInited?.call(this); // from user
         timer.cancel();
       });
     });

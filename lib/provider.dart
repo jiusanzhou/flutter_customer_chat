@@ -1,7 +1,7 @@
 import 'package:flutter_customer_chat/models/message.dart';
 import 'package:flutter_customer_chat/models/user.dart';
 
-abstract class Provider {
+abstract class ChatProvider {
 
   // get the code back
 
@@ -10,7 +10,7 @@ abstract class Provider {
 
   String isInited; // code to check 
   
-  Provider();
+  ChatProvider();
 
   /// initialize a provider
   Future<String> initialize({Map<String, dynamic> config: const {}}) {

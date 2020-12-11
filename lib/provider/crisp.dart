@@ -5,7 +5,7 @@ import 'package:flutter_customer_chat/models/user.dart';
 import 'package:flutter_customer_chat/provider.dart';
 
 /// CrispProvider scrisp
-class CrispProvider extends Provider {
+class CrispProvider extends ChatProvider {
   /// onweb or native ???
   /// 
   /// for now only suppoted web
