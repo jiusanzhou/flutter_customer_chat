@@ -31,6 +31,4 @@ abstract class ChatProvider {
   Future<String> setValue(String key, dynamic value) {
     return Future.value();
   }
-
-  /// TODO: initialized
 }

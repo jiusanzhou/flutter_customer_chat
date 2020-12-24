@@ -54,6 +54,8 @@ class Controller {
   ChatProvider _provider;
 
   WebviewController _webview;
+
+  bool _inited = false;
   
   Controller(this._widget) {
     _provider = _widget.provider;
@@ -81,11 +83,13 @@ class Controller {
   }
 
   onLoadFinish() {
+    if (_inited) return;
     /// start the inited check timer
     Timer.periodic(Duration(milliseconds: 200), (timer) {
       _webview.evaluateJavascript(provider.isInited).then((value) {
         if (!value) return;
         print("chat page has been inited ...");
+        _inited = true;
         _provider.initialize().then((code) => _webview.evaluateJavascript(code)); // from provider
         _widget.onInited?.call(this); // from user
         timer.cancel();

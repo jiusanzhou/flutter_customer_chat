@@ -12,18 +12,34 @@ class AiHeCongProvider extends ChatProvider {
 
   final String basicUrl;
   final String entId;
+  final bool simple;
+  final User user;
+
+  String _url;
 
   final String codeMvCloseBtn = """var _sb=setInterval(function(){var btn=document.querySelector('.chat-iframe-close');if (btn) {btn.remove();clearInterval(_sb)}},200);""";
 
   AiHeCongProvider(this.entId, {
     this.basicUrl: "https://aihecong.gitee.io/",
-  }) : super();
+    this.simple: true,
+    this.user,
+  }) {
+    if (basicUrl == "https://aihecong.gitee.io/" && simple) {
+      _url = basicUrl + "chat.html";
+    } else {
+      _url = basicUrl;
+    }
+
+    if (user != null) {
+      _url = "$_url?customer=${json.encode(user)}";
+    }
+  }
 
   @override
-  String get url => "$basicUrl?entId=$entId";
+  String get url => "$_url?entId=$entId"; // to check
 
   @override
-  String get isInited => "typeof _AIHECONG !== 'undefined'";
+  String get isInited => simple ? "1 === 1" : "typeof _AIHECONG !== 'undefined'";
   
   /// initialize a provider
   @override
@@ -33,7 +49,14 @@ class AiHeCongProvider extends ChatProvider {
 
   @override
   Future<String> setUser(User user) {
+    // if simple just reload the page with js
+    var pre = """
+    _AIHECONG = function (key, value) {
+      window.location.search='entId=$entId&'+key+'='+JSON.stringify(value);
+    }
+    """;
     return Future.value("""
+    ${simple?pre:""}
     _AIHECONG('customer', {
       '名称': '${user.nickname??''}',
       '邮箱' : '${user.email??''}',
