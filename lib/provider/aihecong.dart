@@ -13,9 +13,11 @@ class AiHeCongProvider extends ChatProvider {
   final String basicUrl;
   final String entId;
   final bool simple;
-  final User user;
 
   String _url;
+  
+  User user;
+  Map<String, dynamic> _data;
 
   final String codeMvCloseBtn = """var _sb=setInterval(function(){var btn=document.querySelector('.chat-iframe-close');if (btn) {btn.remove();clearInterval(_sb)}},200);""";
 
@@ -50,6 +52,9 @@ class AiHeCongProvider extends ChatProvider {
   @override
   Future<String> setUser(User user) {
     // if simple just reload the page with js
+
+    this.user = user;
+
     var pre = """
     _AIHECONG = function (key, value) {
       window.location.search='entId=$entId&'+key+'='+JSON.stringify(value);
@@ -77,5 +82,20 @@ class AiHeCongProvider extends ChatProvider {
   Future<String> setValue(String key, dynamic value) {
     var data = jsonEncode(value);
     return Future.value("""_AIHECONG('update', { entId: '$entId', $key: $data });""");
+  }
+
+  String _updateCustomerCode() {
+    var s = "{";
+    s += "'名称': '${user.nickname??''}',";
+    s += "'邮箱' : '${user.email??''}',";
+    s += "'手机' : '${user.phone??''}',";
+
+    _data.forEach((key, value) {
+      s += "'$key': ${jsonEncode(value)},";
+    });
+
+    s += "}";
+
+    return "window.location.search='entId=$entId&customer='+JSON.stringify($s)";
   }
 }
