@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart' as inappWebview;
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart' as officalWebview;
 
 enum WebviewType {
   WebviewPreview,
@@ -108,19 +108,19 @@ class _WebviewState extends State<Webview> {
   Widget _inappwebview() {
     return Scaffold(
       resizeToAvoidBottomInset: true, // 弹起键盘时可以 resize
-      body: InAppWebView(
+      body: inappWebview.InAppWebView(
         initialUrl: widget.initialUrl,
         // initialData: widget.initialData ?? InAppWebViewInitialData(
         //   data: widget.initialData,
         // ),
         onWebViewCreated: (c) => _controller._inAppWebViewController = c,
-        initialOptions: InAppWebViewWidgetOptions(
-          inAppWebViewOptions: InAppWebViewOptions(
+        initialOptions: inappWebview.InAppWebViewGroupOptions(
+          crossPlatform: inappWebview.InAppWebViewOptions(
             javaScriptEnabled: true,
             debuggingEnabled: false,
             // contentBlockers: widget.blockers,
           ),
-          androidInAppWebViewOptions: AndroidInAppWebViewOptions(
+          android: inappWebview.AndroidInAppWebViewOptions(
             useWideViewPort: false,
           ),
         ),
@@ -133,10 +133,10 @@ class _WebviewState extends State<Webview> {
   Widget _flutterwebview() {
     return Scaffold(
       resizeToAvoidBottomInset: true, 
-      body: WebView(
+      body: officalWebview.WebView(
         initialUrl: widget.initialUrl,
         debuggingEnabled: false,
-        javascriptMode: JavascriptMode.unrestricted,
+        javascriptMode: officalWebview.JavascriptMode.unrestricted,
         onWebViewCreated: (c) => _controller._webViewController = c,
         onPageFinished: (url) => widget.onLoadStop?.call(_controller, url),
         onPageStarted: (url) => widget.onLoadStart?.call(_controller, url),
@@ -148,8 +148,8 @@ class _WebviewState extends State<Webview> {
 class WebviewController {
   Webview _widget;
 
-  WebViewController _webViewController;
-  InAppWebViewController _inAppWebViewController;
+  officalWebview.WebViewController _webViewController;
+  inappWebview.InAppWebViewController _inAppWebViewController;
   FlutterWebviewPlugin _flutterWebViewPlugin;
 
   WebviewController(this._widget) {
