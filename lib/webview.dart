@@ -109,7 +109,7 @@ class _WebviewState extends State<Webview> {
     return Scaffold(
       resizeToAvoidBottomInset: true, // 弹起键盘时可以 resize
       body: inappWebview.InAppWebView(
-        initialUrl: widget.initialUrl,
+        initialUrlRequest: inappWebview.URLRequest(url: Uri.parse(widget.initialUrl)),
         // initialData: widget.initialData ?? InAppWebViewInitialData(
         //   data: widget.initialData,
         // ),
@@ -117,15 +117,14 @@ class _WebviewState extends State<Webview> {
         initialOptions: inappWebview.InAppWebViewGroupOptions(
           crossPlatform: inappWebview.InAppWebViewOptions(
             javaScriptEnabled: true,
-            debuggingEnabled: false,
             // contentBlockers: widget.blockers,
           ),
           android: inappWebview.AndroidInAppWebViewOptions(
             useWideViewPort: false,
           ),
         ),
-        onLoadStop: (c, url) => widget.onLoadStop?.call(_controller, url),
-        onLoadStart: (c, url) => widget.onLoadStart?.call(_controller, url),
+        onLoadStop: (c, url) => widget.onLoadStop?.call(_controller, url.toString()),
+        onLoadStart: (c, url) => widget.onLoadStart?.call(_controller, url.toString()),
       ),
     );
   }

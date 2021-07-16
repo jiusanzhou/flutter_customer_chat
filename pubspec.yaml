@@ -10,8 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webview_flutter: ^0.3.21
-  flutter_inappwebview: ^4.0.0+4
+  # webview_flutter: ^0.3.21
+  # webview_flutter: ^1.0.7
+  webview_flutter: ^2.0.10
+  # flutter_inappwebview: ^4.0.0+4
+  flutter_inappwebview: ^5.3.2
   flutter_webview_plugin: ^0.3.11
 
 dev_dependencies:
