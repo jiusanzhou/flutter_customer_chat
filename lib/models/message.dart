@@ -1,4 +1,1 @@
-
-class Message {
-
-}
+class Message {}

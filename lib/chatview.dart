@@ -7,7 +7,6 @@ import 'package:flutter_customer_chat/models/user.dart';
 import 'package:flutter_customer_chat/provider.dart';
 
 class ChatView extends StatefulWidget {
-
   final ChatProvider provider;
   final bool hiddenCopyright;
 
@@ -17,9 +16,11 @@ class ChatView extends StatefulWidget {
   ///WebviewType choose a special type
   final WebviewType webviewType;
 
-  ChatView(this.provider, {
+  ChatView(
+    this.provider, {
     this.hiddenCopyright = false,
-    this.onCreated, this.onInited,
+    this.onCreated,
+    this.onInited,
     this.webviewType: WebviewType.InappWebview,
   });
 
@@ -28,7 +29,6 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-
   Controller _controller;
 
   @override
@@ -53,16 +53,14 @@ class _ChatViewState extends State<ChatView> {
   }
 }
 
-
 class Controller {
-
   ChatView _widget;
   ChatProvider _provider;
 
   ZoeWebviewController _webview;
 
   bool _inited = false;
-  
+
   Controller(this._widget) {
     _provider = _widget.provider;
   }
@@ -74,29 +72,36 @@ class Controller {
   ChatProvider get provider => _provider;
 
   Future<void> setUser(User user) {
-    _provider.setUser(user).then((code) => _webview.evaluateJavascript(code)).then((value) => print("setUser: $value"));
+    _provider
+        .setUser(user)
+        .then((code) => _webview.evaluateJavascript(code))
+        .then((value) => print("setUser: $value"));
     return Future.value();
   }
 
   Future<void> setValue(String key, dynamic value) {
-    _provider.setValue(key, value).then((code) => _webview.evaluateJavascript(code));
+    _provider
+        .setValue(key, value)
+        .then((code) => _webview.evaluateJavascript(code));
     return Future.value();
   }
 
-  Future<void> sendMessage(Message msg, { User user }) {
-    _provider.sendMessage(msg, user: user).then((code) => _webview.evaluateJavascript(code));
+  Future<void> sendMessage(Message msg, {User user}) {
+    _provider
+        .sendMessage(msg, user: user)
+        .then((code) => _webview.evaluateJavascript(code));
     return Future.value();
   }
 
   Future<void> showCopyright(bool v) async {
-    await _webview.evaluateJavascript(v?
-      _provider.codeShowCopyright : 
-      _provider.codeHiddenCopyright);
+    await _webview.evaluateJavascript(
+        v ? _provider.codeShowCopyright : _provider.codeHiddenCopyright);
     return Future.value();
   }
 
   onLoadFinish() {
     if (_inited) return;
+
     /// start the inited check timer
     Timer.periodic(Duration(milliseconds: 200), (timer) {
       _webview.evaluateJavascript(provider.isInited).then((value) {
@@ -105,9 +110,12 @@ class Controller {
         _inited = true;
 
         // hidden copyright
-        if (_widget.hiddenCopyright) _webview.evaluateJavascript(_provider.codeHiddenCopyright);
-        
-        _provider.initialize().then((code) => _webview.evaluateJavascript(code)); // from provider
+        if (_widget.hiddenCopyright)
+          _webview.evaluateJavascript(_provider.codeHiddenCopyright);
+
+        _provider
+            .initialize()
+            .then((code) => _webview.evaluateJavascript(code)); // from provider
         _widget.onInited?.call(this); // from user
         timer.cancel();
       });

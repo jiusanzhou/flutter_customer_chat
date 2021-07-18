@@ -62,7 +62,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   var providers = [
     ["Crisp", CrispProvider("c5e819a3-d4d3-4cfe-a73a-48e0424e3dd2")],
     ["爱合从", AiHeCongProvider("29284")],
@@ -77,34 +76,31 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+              child: Column(
             children: List.generate(
               providers.length,
               (index) => Container(
-                padding: EdgeInsets.all(10),
-                child: ElevatedButton(
-                  child: Text(providers[index][0]),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => ChatPage(
-                      providers[index][0],
-                      providers[index][1],
-                    )),
-                  ),
-                )
-              ),
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton(
+                    child: Text(providers[index][0]),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => ChatPage(
+                                providers[index][0],
+                                providers[index][1],
+                              )),
+                    ),
+                  )),
             ),
-          )
-      
-        ),
-      )
-    );
+          )),
+        ));
   }
 }
