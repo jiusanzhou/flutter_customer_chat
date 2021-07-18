@@ -9,13 +9,19 @@ import 'package:flutter_customer_chat/webview.dart';
 class ChatView extends StatefulWidget {
 
   final ChatProvider provider;
+  final bool hiddenCopyright;
 
   final void Function(Controller controller) onCreated;
   final void Function(Controller controller) onInited;
+
   ///WebviewType choose a special type
   final WebviewType webviewType;
 
-  ChatView(this.provider, { this.onCreated, this.onInited, this.webviewType: WebviewType.InappWebview });
+  ChatView(this.provider, {
+    this.hiddenCopyright = false,
+    this.onCreated, this.onInited,
+    this.webviewType: WebviewType.InappWebview,
+  });
 
   @override
   _ChatViewState createState() => _ChatViewState();
@@ -82,6 +88,13 @@ class Controller {
     return Future.value();
   }
 
+  Future<void> showCopyright(bool v) async {
+    await _webview.evaluateJavascript(v?
+      _provider.codeShowCopyright : 
+      _provider.codeHiddenCopyright);
+    return Future.value();
+  }
+
   onLoadFinish() {
     if (_inited) return;
     /// start the inited check timer
@@ -90,6 +103,10 @@ class Controller {
         if (!value) return;
         print("chat page has been inited ...");
         _inited = true;
+
+        // hidden copyright
+        if (_widget.hiddenCopyright) _webview.evaluateJavascript(_provider.codeHiddenCopyright);
+        
         _provider.initialize().then((code) => _webview.evaluateJavascript(code)); // from provider
         _widget.onInited?.call(this); // from user
         timer.cancel();

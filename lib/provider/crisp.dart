@@ -14,23 +14,11 @@ class CrispProvider extends ChatProvider {
   /// 
   final String basicUrl;
   final String websiteID;
-  final bool hiddenBrand;
-
-  final String codeHiddenBrand = """
-    var _sb = setInterval(function(){
-      var b = document.querySelector("#crisp-chatbox > div > div > div\:nth-child(2) > div > div\:nth-child(7)");
-      if (b) {
-        b.style = "display: none!important";
-        clearInterval(_sb);
-      }
-    },500);
-    """;
 
   CrispProvider(
     this.websiteID,
     {
       this.basicUrl: 'https://go.crisp.chat',
-      this.hiddenBrand: true,
     }
   ) : super();
 
@@ -39,11 +27,14 @@ class CrispProvider extends ChatProvider {
 
   @override
   String get isInited => "typeof \$crisp !== 'undefined'"; 
+
+  @override
+  String get copyrightSelector => "#crisp-chatbox > div > div > div\:nth-child(2) > div > div\:nth-child(7)";
   
   /// initialize a provider
   @override
   Future<String> initialize({Map<String, dynamic> config: const {}}) {
-    return Future.value(codeHiddenBrand);
+    return Future.value("");
   }
 
   /// set a special user for current instance
