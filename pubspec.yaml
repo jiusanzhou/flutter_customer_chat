@@ -1,8 +1,7 @@
 name: flutter_customer_chat
 description: Customer chat flutter package
 version: 1.0.0
-author:
-homepage:
+homepage: https://labs.zoe.im/flutter_customer_chat
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
