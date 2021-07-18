@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_zoewebview/flutter_zoewebview.dart';
 import 'package:flutter_customer_chat/models/message.dart';
 import 'package:flutter_customer_chat/models/user.dart';
 import 'package:flutter_customer_chat/provider.dart';
-import 'package:flutter_customer_chat/webview.dart';
 
 class ChatView extends StatefulWidget {
 
@@ -42,10 +42,10 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    return Webview(
+    return ZoeWebview(
       webviewType: widget.webviewType,
       initialUrl: widget.provider.url,
-      initialData: widget.provider.html,
+      // initialData: widget.provider.html, // TODO:
       onWebViewCreated: (c) => _controller._webview = c,
       onLoadStart: (_, url) => {},
       onLoadStop: (_, url) => _controller.onLoadFinish(),
@@ -59,7 +59,7 @@ class Controller {
   ChatView _widget;
   ChatProvider _provider;
 
-  WebviewController _webview;
+  ZoeWebviewController _webview;
 
   bool _inited = false;
   
@@ -69,7 +69,7 @@ class Controller {
 
   // controller for user to controller everything.
 
-  WebviewController get webview => _webview;
+  ZoeWebviewController get webview => _webview;
 
   ChatProvider get provider => _provider;
 

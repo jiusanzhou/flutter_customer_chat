@@ -56,7 +56,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_inappwebview:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_inappwebview
       url: "https://pub.dartlang.org"
@@ -68,12 +68,19 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_webview_plugin:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_webview_plugin
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
+  flutter_zoewebview:
+    dependency: "direct main"
+    description:
+      name: flutter_zoewebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   matcher:
     dependency: transitive
     description:
@@ -157,7 +164,7 @@ packages:
     source: hosted
     version: "2.1.0"
   webview_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: webview_flutter
       url: "https://pub.dartlang.org"

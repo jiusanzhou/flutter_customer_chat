@@ -1,7 +1,6 @@
 library flutter_customer_chat;
 
 export 'chatview.dart';
-export 'webview.dart';
 
 export 'models/user.dart';
 export 'models/message.dart';
