@@ -1,6 +1,6 @@
 name: flutter_customer_chat
 description: Customer chat flutter package
-version: 1.0.1
+version: 1.0.2
 homepage: https://labs.zoe.im/flutter_customer_chat
 
 environment:
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_zoewebview: ^1.0.0
+  flutter_zoewebview: ^1.1.0
 
 dev_dependencies:
   flutter_test:
