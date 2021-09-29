@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:example/page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_customer_chat/provider/aihecong.dart';
 import 'package:flutter_customer_chat/provider/crisp.dart';
+
+import "./page.dart";
 
 void main() {
   // 设置Android透明状态栏

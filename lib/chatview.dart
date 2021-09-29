@@ -46,7 +46,10 @@ class _ChatViewState extends State<ChatView> {
       webviewType: widget.webviewType,
       initialUrl: widget.provider.url,
       // initialData: widget.provider.html, // TODO:
-      onWebViewCreated: (c) => _controller._webview = c,
+      onWebViewCreated: (c) {
+        print("===> onWebViewCreated $c");
+        _controller._webview = c;
+      },
       onLoadStart: (_, url) => {},
       onLoadStop: (_, url) => _controller.onLoadFinish(),
     );
