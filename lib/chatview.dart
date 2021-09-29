@@ -47,11 +47,16 @@ class _ChatViewState extends State<ChatView> {
       initialUrl: widget.provider.url,
       // initialData: widget.provider.html, // TODO:
       onWebViewCreated: (c) {
-        print("===> onWebViewCreated $c");
         _controller._webview = c;
       },
-      onLoadStart: (_, url) => {},
-      onLoadStop: (_, url) => _controller.onLoadFinish(),
+      onLoadStart: (c, url) {
+        _controller._webview = c;
+      },
+      onLoadStop: (c, url) {
+        print("chat url: $url");
+        _controller._webview = c;
+        _controller.onLoadFinish();
+      },
     );
   }
 }
@@ -103,7 +108,12 @@ class Controller {
   }
 
   onLoadFinish() {
-    if (_inited) return;
+    if (_webview==null || _inited) {
+      // hidden copyright
+      if (_widget.hiddenCopyright)
+        _webview?.evaluateJavascript(_provider.codeHiddenCopyright);
+      return;
+    }
 
     /// start the inited check timer
     Timer.periodic(Duration(milliseconds: 200), (timer) {

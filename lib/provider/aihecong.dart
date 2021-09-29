@@ -16,7 +16,7 @@ class AiHeCongProvider extends ChatProvider {
 
   @override
   String get copyrightSelector =>
-      "#aihecong > div > div.chat-message-body div.copyright";
+      "div.copyright";
 
   final String codeMvCloseBtn =
       """var _sb=setInterval(function(){var btn=document.querySelector('.chat-iframe-close');if (btn) {btn.remove();clearInterval(_sb)}},200);""";
