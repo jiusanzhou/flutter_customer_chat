@@ -6,8 +6,10 @@ export 'models/user.dart';
 export 'models/message.dart';
 
 export 'provider.dart';
+
 export 'provider/crisp.dart';
 export 'provider/aihecong.dart';
+export 'provider/tawk.dart';
 
 /// export WebviewType
 export 'package:flutter_zoewebview/src/provider.dart';

@@ -23,11 +23,11 @@ class AiHeCongProvider extends ChatProvider {
 
   AiHeCongProvider(
     this.entId, {
-    this.basicUrl: "https://aihecong.gitee.io/",
+    this.basicUrl: "https://aihecong.github.io/",
     this.simple: true,
     this.user,
   }) {
-    if (basicUrl == "https://aihecong.gitee.io/" && simple) {
+    if (basicUrl == "https://aihecong.github.io/" && simple) {
       _url = basicUrl + "chat.html";
     } else {
       _url = basicUrl;
@@ -48,7 +48,10 @@ class AiHeCongProvider extends ChatProvider {
   /// initialize a provider
   @override
   Future<String> initialize({Map<String, dynamic> config: const {}}) {
-    return Future.value(codeMvCloseBtn);
+    if (!simple) {
+      return Future.value(codeMvCloseBtn);
+    }
+    return Future.value("");
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_customer_chat/provider/aihecong.dart';
 import 'package:flutter_customer_chat/provider/crisp.dart';
+import 'package:flutter_customer_chat/provider/tawk.dart';
 
 import "./page.dart";
 
@@ -66,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var providers = [
     ["Crisp", CrispProvider("c5e819a3-d4d3-4cfe-a73a-48e0424e3dd2")],
     ["爱合从", AiHeCongProvider("10003")],
+    ["Tawk", TawkProvider("618338986885f60a50ba3aa3/1fjk9a62l")]
   ];
 
   @override

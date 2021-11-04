@@ -10,25 +10,31 @@ abstract class ChatProvider {
   String isInited; // code to check
 
   String copyrightSelector; // copyright element selector
+  String codeSelectCopyright; // code to get copyright element
 
   ChatProvider();
 
-  String get codeHiddenCopyright => copyrightSelector != null
+  static ChatProvider from(String type) {
+    // TODO:
+  }
+
+  String get codeHiddenCopyright => copyrightSelector != null || codeSelectCopyright != null
       ? """
     var _sb = setInterval(function(){
-      var b = document.querySelector("$copyrightSelector");
+    var b = ${codeSelectCopyright!=null?codeSelectCopyright:'document.querySelector("$copyrightSelector")'};
       if (b) {
-        b.style = "display: none!important";
+        b.style.display = "none!important";
         clearInterval(_sb);
       }
     }, 500);
+    '__hidden_copyright'
     """
       : "";
 
-  String get codeShowCopyright => copyrightSelector != null
+  String get codeShowCopyright => copyrightSelector != null || codeSelectCopyright != null
       ? """
-    var b = document.querySelector("$copyrightSelector");
-    if (b) b.style = "display: block!important";
+    var b = ${codeSelectCopyright!=null?codeSelectCopyright:'document.querySelector("$copyrightSelector")'};
+    if (b) b.style.display = "block!important";
     """
       : "";
 
@@ -52,3 +58,5 @@ abstract class ChatProvider {
     return Future.value();
   }
 }
+
+// custom provider

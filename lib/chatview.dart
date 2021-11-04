@@ -108,10 +108,7 @@ class Controller {
   }
 
   onLoadFinish() {
-    if (_webview==null || _inited) {
-      // hidden copyright
-      if (_widget.hiddenCopyright)
-        _webview?.evaluateJavascript(_provider.codeHiddenCopyright);
+    if (_webview == null || _inited) {
       return;
     }
 
@@ -124,11 +121,15 @@ class Controller {
 
         // hidden copyright
         if (_widget.hiddenCopyright)
-          _webview.evaluateJavascript(_provider.codeHiddenCopyright);
+          _webview.evaluateJavascript(_provider.codeHiddenCopyright)
+            .then((value) => print("hidden copyright: $value"));
 
         _provider
             .initialize()
-            .then((code) => _webview.evaluateJavascript(code)); // from provider
+            .then((code) => _webview.evaluateJavascript(code))
+            .then((value) => {
+              print("initialize code finish: $value")
+            }); // from provider
         _widget.onInited?.call(this); // from user
         timer.cancel();
       });
