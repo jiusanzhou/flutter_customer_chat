@@ -17,6 +17,6 @@ A flutter package for customer chat.
 
 - [x] [crisp](https://crisp.chat)
 - [x] [aihecong](https://aihecong.com)
-- [ ] [intercom](https://intercom.com)
+- [x] [tawk.to](https://tawk.to)
 - [ ] [chatwoot](https://github.com/chatwoot/chatwoot)
-- [ ] [tawk.to](https://tawk.to)
+- [ ] [~~intercom~~](https://intercom.com)
